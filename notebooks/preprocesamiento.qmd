@@ -1,0 +1,59 @@
+
+```{python}
+# Carga de librerías base
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+```
+
+```{python}
+df = pd.read_csv("../data/raw/RT_IOT2022")
+```
+
+
+```{python}
+#inspeccion inicial 
+print(f"Dimensiones originales: {df.shape}")
+df.head()
+```
+
+
+```{python}
+#limpieza breve 
+
+#eliminar indice
+df = df.iloc[:, 1:]
+
+#eliminar filas con valores nulos
+df = df.dropna()
+
+print(f"Dimensiones tras limpieza: {df.shape}")
+```
+
+
+```{python}
+#label encoder para varaibles categoricas
+
+#identificar las var categoricas
+categorical_cols = df.select_dtypes(include=['object']).columns
+print(f"Columnas categóricas detectadas: {list(categorical_cols)}")
+
+#aplicarles labelenconder
+label_encoders = {}
+for col in categorical_cols:
+    le = LabelEncoder()
+    df[col] = le.fit_transform(df[col].astype(str))
+    label_encoders[col] = le 
+    
+    #guardamos el codificador por si necesitamos revertir la transformación
+
+df.head()
+```
+
+
+```{python}
+#importar 
+
+df.to_csv('RT_IoT2022_preprocesado.csv', index=False)
+```
+
